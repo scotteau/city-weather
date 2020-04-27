@@ -5,7 +5,6 @@ import {
   Mode,
   OpenWeatherResType,
   Report,
-  Usage,
   Weather,
 } from "../Model";
 import Loader from "./Loader";

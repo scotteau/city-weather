@@ -43,16 +43,16 @@ export class Weather {
   }
 }
 
-export enum Usage {
-  Feature,
-  Normal,
+export enum CardAction {
+  PUBLISH,
+  REFRESH,
+  DELETE,
 }
 
-export interface CityWeather {
-  city: string;
-  date: Date;
-  temp: number;
-  forecast: [];
+export enum NavAction {
+  ADD_A_CITY,
+  TOGGLE_EDIT,
+  TOGGLE_THEME
 }
 
 export interface Report {

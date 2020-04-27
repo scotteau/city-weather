@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { City, Mode } from "../Model";
+import {CardAction, City, Mode} from "../Model";
 import Loader from "./Loader";
 
 interface myProps {
@@ -53,14 +53,13 @@ const Card = ({
     const controls = ["publish", "refresh", "info"];
 
     const onPublish = () => {
-      cardActions("publish", index);
+      cardActions(CardAction.PUBLISH, index);
     };
     const onRefresh = () => {
-      cardActions("refresh", index);
+      cardActions(CardAction.REFRESH, index);
     };
     const onMoreInfo = () => {
       console.log("more info");
-      // open a new tab on unsplash about this photo
       const url =
         theme === Mode.light ? city.cover.day.link : city.cover.night.link;
       window.open(url, "_blank");
@@ -79,7 +78,6 @@ const Card = ({
       );
     });
   };
-
   const overlayColor = "#ab47bc";
 
   return (
@@ -97,7 +95,7 @@ const Card = ({
         <button
           className={"delete"}
           onClick={() => {
-            cardActions("delete", index);
+            cardActions(CardAction.DELETE, index);
           }}
         >
           <span className="material-icons">close</span>

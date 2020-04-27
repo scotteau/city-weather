@@ -475,11 +475,11 @@ $card_info_opacity: 0.9;
         &__controls {
           width: 100%;
           opacity: 0;
-
           position: absolute;
           display: flex;
           justify-content: space-evenly;
           transform: scale(1.5);
+          transition: opacity 0.3s ease;
 
           button {
             background-color: transparent;
@@ -518,8 +518,8 @@ $card_info_opacity: 0.9;
     height: 2.5em;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
-    -webkit-animation: load7 1.0s infinite ease-in-out;
-    animation: load7 1.0s infinite ease-in-out;
+    -webkit-animation: load7 1s infinite ease-in-out;
+    animation: load7 1s infinite ease-in-out;
   }
   .loader {
     color: #ffffff;
@@ -585,4 +585,3 @@ $card_info_opacity: 0.9;
     }
   }
 }
-

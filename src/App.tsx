@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Axios from "axios";
-import {CardImage, City, Mode} from "./Model";
+import { CardAction, CardImage, City, Mode, NavAction } from "./Model";
 import Card from "./components/Card";
 import Navbar from "./components/Navbar";
 import Feature from "./components/Feature";
@@ -21,18 +21,18 @@ const App = ({ cities }: myProps) => {
 
   const numberOfImages = 30;
 
-  const handleChanges = (command: string) => {
-    if (command === "add a city") {
+  const handleChanges = (action: NavAction) => {
+    if (action === NavAction.ADD_A_CITY) {
       setAddingCity(true);
     }
 
-    if (command === "toggle mode") {
+    if (action === NavAction.TOGGLE_THEME) {
       //todo - switching between light and dark
       setMode(mode === Mode.light ? Mode.dark : Mode.light);
       window.scrollTo(0, 0);
     }
 
-    if (command === "toggle edit") {
+    if (action === NavAction.TOGGLE_EDIT) {
       setEditMode(!editMode);
     }
   };
@@ -42,14 +42,14 @@ const App = ({ cities }: myProps) => {
       return data.map((city, index) => {
         if (index !== 0) {
           return (
-              <Card
-                  city={city}
-                  key={`${city}-${index}`}
-                  editMode={editMode}
-                  theme={mode}
-                  index={index}
-                  cardActions={onCardActions}
-              />
+            <Card
+              city={city}
+              key={`${city}-${index}`}
+              editMode={editMode}
+              theme={mode}
+              index={index}
+              cardActions={onCardActions}
+            />
           );
         } else {
           return null;
@@ -58,17 +58,17 @@ const App = ({ cities }: myProps) => {
     }
   };
 
-  const onCardActions = (action: string, index: number) => {
+  const onCardActions = (action: CardAction, index: number) => {
     if (!data) return;
 
-    if (action === "publish") {
+    if (action === CardAction.PUBLISH) {
       const payload = data[index] as City;
       const updatedData = data.filter((city, i) => i !== index);
       setData([payload, ...updatedData]);
       window.scrollTo(0, 0);
     }
 
-    if (action === "delete") {
+    if (action === CardAction.DELETE) {
       console.log(index, action);
       const updatedData = Array.from(data).filter((c, i) => i !== index);
       setData(updatedData);
@@ -77,7 +77,7 @@ const App = ({ cities }: myProps) => {
       }
     }
 
-    if (action === "refresh") {
+    if (action === CardAction.REFRESH) {
       console.log("refresh");
       const city = data[index] as City;
 
@@ -88,13 +88,13 @@ const App = ({ cities }: myProps) => {
       };
 
       updatedCity.cover.day =
-          mode === Mode.light
-              ? city.backupImages.day[randomIndex]
-              : city.cover.day;
+        mode === Mode.light
+          ? city.backupImages.day[randomIndex]
+          : city.cover.day;
       updatedCity.cover.night =
-          mode === Mode.dark
-              ? city.backupImages.night[randomIndex]
-              : city.cover.night;
+        mode === Mode.dark
+          ? city.backupImages.night[randomIndex]
+          : city.cover.night;
     }
 
     localStorage.setItem("cities", JSON.stringify(data));
@@ -104,8 +104,6 @@ const App = ({ cities }: myProps) => {
     if (inputElement.current) {
       // @ts-ignore
       inputElement.current.focus();
-      // @ts-ignore
-      inputElement.current.select();
     }
   }, [addingCity]);
 
@@ -118,7 +116,7 @@ const App = ({ cities }: myProps) => {
 
     try {
       const googleGeocodingUrl =
-          "https://maps.googleapis.com/maps/api/geocode/json";
+        "https://maps.googleapis.com/maps/api/geocode/json";
 
       const geocoding_response = await Axios.get(googleGeocodingUrl, {
         params: {
@@ -151,7 +149,6 @@ const App = ({ cities }: myProps) => {
         },
       });
 
-
       const unsplash_response_dark = await Axios.get(unsplashBaseUrl, {
         headers: {
           Authorization: process.env.REACT_APP_UNSPLASH_ACCESS_KEY,
@@ -163,24 +160,24 @@ const App = ({ cities }: myProps) => {
       });
 
       const imagesData_light = unsplash_response_light.data.results.map(
-          (p: any) => {
-            return new CardImage(
-                p.urls.regular,
-                p.id,
-                p.links.html,
-                p.alt_description
-            );
-          }
+        (p: any) => {
+          return new CardImage(
+            p.urls.regular,
+            p.id,
+            p.links.html,
+            p.alt_description
+          );
+        }
       );
       const imagesData_dark = unsplash_response_dark.data.results.map(
-          (p: any) => {
-            return new CardImage(
-                p.urls.regular,
-                p.id,
-                p.links.html,
-                p.alt_description
-            );
-          }
+        (p: any) => {
+          return new CardImage(
+            p.urls.regular,
+            p.id,
+            p.links.html,
+            p.alt_description
+          );
+        }
       );
 
       const randomIndex = Math.floor(Math.random() * numberOfImages);
@@ -219,70 +216,67 @@ const App = ({ cities }: myProps) => {
   }, [data]);
 
   return (
-      //region Structure JSX
-      <div
-          className={"container"}
-          id={"start"}
-          style={mode === Mode.dark ? { backgroundColor: "#212121" } : {}}
-      >
-        <Navbar onChanges={handleChanges} theme={mode} editMode={editMode} />
+    <div
+      className={"container"}
+      id={"start"}
+      style={mode === Mode.dark ? { backgroundColor: "#212121" } : {}}
+    >
+      <Navbar onChanges={handleChanges} theme={mode} editMode={editMode} />
 
-        <div className="popup" style={!addingCity ? { display: "none" } : {}}>
-          <form onSubmit={(e: any) => fetchingData(e)}>
-            {!isFetching ? (
-                <input
-                    type={"text"}
-                    autoComplete={"off"}
-                    placeholder={"add a new city"}
-                    name={"city"}
-                    onChange={(e) => {
-                      setCurrentCityName(e.target.value);
-                    }}
-                    value={currentCityName}
-                    ref={inputElement}
-                    autoFocus={addingCity}
-                />
-            ) : (
-                <div className="loader">Loading...</div>
-            )}
-          </form>
-          <div
-              className="popup__overlay"
-              onClick={() => {
-                setAddingCity(false);
-                setCurrentCityName("");
+      <div className="popup" style={!addingCity ? { display: "none" } : {}}>
+        <form onSubmit={(e: any) => fetchingData(e)}>
+          {!isFetching ? (
+            <input
+              type={"text"}
+              autoComplete={"off"}
+              placeholder={"add a new city"}
+              name={"city"}
+              onChange={(e) => {
+                setCurrentCityName(e.target.value);
               }}
-          >
-            <></>
-          </div>
-        </div>
-
-        {data && data.length !== 0 && (
-            <Feature
-                city={data[0]}
-                editMode={editMode}
-                theme={mode}
-                cardActions={onCardActions}
+              value={currentCityName}
+              ref={inputElement}
+              autoFocus={addingCity}
             />
-        )}
-
-        <section className="cards">
-          {data && (
-              <>
-                {renderCards()}
-
-                {data.length !== 0 && (
-                    <div className={"anchor"} id={"#end"}>
-                      <a href={"#start"}>
-                        <span className={"material-icons"}>arrow_upward</span>
-                      </a>
-                    </div>
-                )}
-              </>
+          ) : (
+            <div className="loader">Loading...</div>
           )}
-        </section>
+        </form>
+        <div
+          className="popup__overlay"
+          onClick={() => {
+            setAddingCity(false);
+            setCurrentCityName("");
+          }}
+        >
+          <></>
+        </div>
       </div>
-      //endregion
+
+      {data && data.length !== 0 && (
+        <Feature
+          city={data[0]}
+          editMode={editMode}
+          theme={mode}
+          cardActions={onCardActions}
+        />
+      )}
+
+      <section className="cards">
+        {data && (
+          <>
+            {renderCards()}
+            {data.length !== 0 && (
+              <div className={"anchor"} id={"#end"}>
+                <a href={"#start"}>
+                  <span className={"material-icons"}>arrow_upward</span>
+                </a>
+              </div>
+            )}
+          </>
+        )}
+      </section>
+    </div>
   );
 };
 
