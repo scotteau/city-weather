@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../logo.svg";
 import logoDark from "../logo-dark.svg";
-import { Mode } from "./App";
+import {Mode} from "../Model";
 
 interface navProps {
     theme?: Mode;

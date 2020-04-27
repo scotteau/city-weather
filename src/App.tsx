@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Axios from "axios";
-import {City, Mode} from "./Model";
+import {CardImage, City, Mode, Usage} from "./Model";
+import Card from "./components/Card";
+import Navbar from "./components/Navbar";
 
 interface myProps {
   cities?: City[];
@@ -149,6 +151,7 @@ const App = ({ cities }: myProps) => {
         },
       });
 
+
       const unsplash_response_dark = await Axios.get(unsplashBaseUrl, {
         headers: {
           Authorization: process.env.REACT_APP_UNSPLASH_ACCESS_KEY,
@@ -161,7 +164,7 @@ const App = ({ cities }: myProps) => {
 
       const imagesData_light = unsplash_response_light.data.results.map(
           (p: any) => {
-            return new Image(
+            return new CardImage(
                 p.urls.regular,
                 p.id,
                 p.links.html,
@@ -171,7 +174,7 @@ const App = ({ cities }: myProps) => {
       );
       const imagesData_dark = unsplash_response_dark.data.results.map(
           (p: any) => {
-            return new Image(
+            return new CardImage(
                 p.urls.regular,
                 p.id,
                 p.links.html,

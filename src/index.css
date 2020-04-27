@@ -1,13 +1,475 @@
-body {
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.container {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  margin: 0 auto;
+  scroll-behavior: smooth;
+  background: white;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
 }
+.container .navbar {
+  position: fixed;
+  width: 200px;
+  height: 100vh;
+  z-index: 20;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+.container .navbar__logo {
+  opacity: 0.9;
+  transform: scale(0.8);
+  padding-top: 1rem;
+}
+.container .navbar__logo a {
+  cursor: pointer;
+}
+.container .navbar ul {
+  font-family: "Abril Fatface", cursive;
+  list-style: none;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  margin: 0 8px;
+}
+.container .navbar ul li {
+  padding: 1.5rem 0;
+  font-size: 1.2rem;
+  transition: all 0.2s ease-out;
+  color: #353535;
+  user-select: none;
+}
+.container .navbar ul li:nth-child(2) {
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
+.container .navbar ul li:hover {
+  cursor: pointer;
+  background: #ab47bc;
+  color: white;
+}
+.container .navbar footer {
+  margin-bottom: 1rem;
+  color: #353535;
+  font-size: 0.9rem;
+}
+.container .navbar footer a:visited {
+  color: #353535;
+}
+.container .popup {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container .popup__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background-color: #353535;
+  opacity: 0.6;
+  cursor: pointer;
+}
+.container .popup form {
+  z-index: 40;
+  width: 40%;
+  margin-bottom: 10%;
+  margin-left: 15%;
+}
+.container .popup form label {
+  color: white;
+  font-family: "Oswald", sans-serif;
+  font-size: 1.3rem;
+}
+.container .popup form input {
+  display: block;
+  padding: 1.2rem 2rem;
+  width: 100%;
+  font-family: "Abril Fatface", cursive;
+  font-size: 2rem;
+  border-radius: 3rem;
+  border: none;
+  text-align: center;
+  color: #353535;
+  text-transform: capitalize;
+}
+.container .card .delete {
+  position: absolute;
+  z-index: 20;
+  transform: scale(1.5);
+  top: 1.2rem;
+  left: 1.2rem;
+  color: white;
+  transition: all 0.15s ease-in-out;
+  border: none;
+  background-color: transparent;
+  height: 1.5rem;
+  width: 1.5rem;
+  cursor: pointer;
+}
+.container .card .delete:hover {
+  transform: scale(1.8);
+  background-color: white;
+  color: #ab47bc;
+}
+.container .card .delete:active {
+  transition: none;
+  transform: scale(2.2);
+}
+.container .card:hover .card__overlay {
+  background: #ab47bc;
+}
+.container .card--feature {
+  grid-column: 2/span 1;
+  width: 100%;
+  height: 600px;
+  margin-bottom: 4px;
+  position: relative;
+  min-width: 600px;
+  cursor: pointer;
+}
+.container .card--feature .delete {
+  cursor: pointer;
+}
+.container .card--feature .card__overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 10;
+  transition: background-color 0.3s ease-in-out;
+}
+.container .card--feature .card__info {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  padding: 1.2rem;
+  user-select: none;
+}
+.container .card--feature .card__info .current {
+  z-index: 20;
+  opacity: 0.8;
+  margin-top: 1rem;
+}
+.container .card--feature .card__info .current__city {
+  font-family: "Abril Fatface", cursive;
+  font-size: 6rem;
+}
+.container .card--feature .card__info .current__date {
+  font-family: "Oswald", sans-serif;
+  font-size: 2rem;
+}
+.container .card--feature .card__info .weather {
+  z-index: 20;
+  opacity: 0.9;
+  display: flex;
+  flex-direction: column;
+}
+.container .card--feature .card__info .weather span {
+  display: inline-block;
+}
+.container .card--feature .card__info .weather__condition {
+  font-family: "Oswald", sans-serif;
+  font-size: 2rem;
+}
+.container .card--feature .card__info .weather__temp {
+  font-family: "Abril Fatface", cursive;
+  font-size: 4rem;
+  position: relative;
+  left: 10px;
+}
+.container .card--feature .card__info .forecast {
+  z-index: 20;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  opacity: 0.9;
+  width: 80%;
+  margin: 0 auto;
+}
+.container .card--feature .card__info .forecast__weather {
+  display: flex;
+  flex-direction: column;
+  margin: 0 4%;
+  width: 4rem;
+}
+.container .card--feature .card__info .forecast__weather__condition, .container .card--feature .card__info .forecast__weather__date {
+  font-family: "Oswald", sans-serif;
+}
+.container .card--feature .card__info .forecast__weather__temp {
+  font-family: "Abril Fatface", cursive;
+  font-size: 1.6rem;
+  position: relative;
+  left: 4px;
+}
+.container .cards {
+  grid-column-start: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-gap: 0 4px;
+  grid-auto-rows: 4px;
+  position: relative;
+  padding-bottom: 300px;
+  min-height: 100vh;
+}
+.container .cards .anchor {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  bottom: 2.5rem;
+}
+.container .cards .anchor span {
+  border: 1px solid lightgray;
+  font-size: 1.8rem;
+  padding: 0.8rem;
+  border-radius: 2rem;
+  color: lightgray;
+  transition: all 0.15s ease-out;
+}
+.container .cards .anchor span:hover {
+  cursor: pointer;
+  background: #ab47bc;
+  color: white;
+}
+@keyframes popup {
+  0% {
+    transform: scale(0);
+  }
+  90% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.container .cards .card,
+.container .cards img {
+  width: 100%;
+}
+.container .cards .card {
+  position: relative;
+  margin-bottom: 4px;
+}
+.container .cards .card:hover {
+  cursor: pointer;
+}
+.container .cards .card .card__overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  opacity: 0.3;
+  transition: background-color 0.3s ease-in-out;
+}
+.container .cards .card__info {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.container .cards .card__info .current {
+  text-align: center;
+  color: white;
+  opacity: 0.9;
+  z-index: 20;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.container .cards .card__info .current__city {
+  font-family: "Abril Fatface", cursive;
+  font-size: 2rem;
+}
+.container .cards .card__info .current__date {
+  font-family: "Oswald", sans-serif;
+  display: inline-block;
+  margin-top: 0.3rem;
+  font-size: 1.2rem;
+}
+.container .cards .card__info .weather {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  opacity: 0.9;
+  z-index: 20;
+}
+.container .cards .card__info .weather__condition {
+  font-family: "Oswald", sans-serif;
+}
+.container .cards .card__info .weather__temp {
+  font-family: "Abril Fatface", cursive;
+  font-size: 2.2rem;
+  position: relative;
+  left: 4px;
+}
+.container .cards .card .current {
+  width: 45%;
+  position: relative;
+}
+.container .cards .card .current h3 {
+  transition: opacity 0.25s ease;
+  user-select: none;
+}
+.container .cards .card .current__controls {
+  width: 100%;
+  opacity: 0;
+  position: absolute;
+  display: flex;
+  justify-content: space-evenly;
+  transform: scale(1.5);
+}
+.container .cards .card .current__controls button {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.2rem;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+}
+.container .cards .card .current__controls button:hover {
+  transform: scale(1.2);
+}
+.container .cards .card .current__controls button:active {
+  transform: scale(1.6);
+}
+
+.container .card__info .current .loader,
+.container .card__info .current .loader:before,
+.container .card__info .current .loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1s infinite ease-in-out;
+  animation: load7 1s infinite ease-in-out;
+}
+.container .card__info .current .loader {
+  color: #ffffff;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.container .card__info .current .loader:before,
+.container .card__info .current .loader:after {
+  content: "";
+  position: absolute;
+  top: 0;
+}
+.container .card__info .current .loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.container .card__info .current .loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+
+.container .popup form .loader,
+.container .popup form .loader:before,
+.container .popup form .loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1s infinite ease-in-out;
+  animation: load7 1s infinite ease-in-out;
+}
+.container .popup form .loader {
+  color: #ffffff;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.container .popup form .loader:before,
+.container .popup form .loader:after {
+  content: "";
+  position: absolute;
+  top: 0;
+}
+.container .popup form .loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.container .popup form .loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+
+/*# sourceMappingURL=index.css.map */
