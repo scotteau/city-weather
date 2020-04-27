@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import Axios from "axios";
-import {CardImage, City, Mode, Usage} from "./Model";
+import {CardImage, City, Mode} from "./Model";
 import Card from "./components/Card";
 import Navbar from "./components/Navbar";
+import Feature from "./components/Feature";
 
 interface myProps {
   cities?: City[];
@@ -44,7 +45,6 @@ const App = ({ cities }: myProps) => {
               <Card
                   city={city}
                   key={`${city}-${index}`}
-                  useBg={false}
                   editMode={editMode}
                   theme={mode}
                   index={index}
@@ -258,9 +258,8 @@ const App = ({ cities }: myProps) => {
         </div>
 
         {data && data.length !== 0 && (
-            <Card
+            <Feature
                 city={data[0]}
-                usage={Usage.Feature}
                 editMode={editMode}
                 theme={mode}
                 cardActions={onCardActions}
