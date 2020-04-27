@@ -62,6 +62,8 @@ const App = ({ cities }: myProps) => {
     if (!data) return;
 
     if (action === CardAction.PUBLISH) {
+
+      console.log("publish");
       const payload = data[index] as City;
       const updatedData = data.filter((city, i) => i !== index);
       setData([payload, ...updatedData]);

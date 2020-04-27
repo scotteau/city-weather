@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {CardAction, City, Mode} from "../Model";
+import { CardAction, City, Mode } from "../Model";
 import Loader from "./Loader";
 
 interface myProps {
@@ -19,7 +19,6 @@ const Card = ({
 }: myProps) => {
   const imageRef = useRef(null) as any;
   const [spans, setSpans] = useState(0);
-  const [shouldConfig, setShouldConfig] = useState(false);
   const [shouldShowControl, setShouldShowControl] = useState(false);
 
   let imageUrl = "";
@@ -45,19 +44,9 @@ const Card = ({
     });
   }, []);
 
-  useEffect(() => {
-    setShouldConfig(editMode);
-  }, [editMode]);
-
   const renderControls = () => {
     const controls = ["publish", "refresh", "info"];
 
-    const onPublish = () => {
-      cardActions(CardAction.PUBLISH, index);
-    };
-    const onRefresh = () => {
-      cardActions(CardAction.REFRESH, index);
-    };
     const onMoreInfo = () => {
       console.log("more info");
       const url =
@@ -65,13 +54,17 @@ const Card = ({
       window.open(url, "_blank");
     };
 
-    const actions = [onPublish, onRefresh, onMoreInfo];
+    const actions = [
+      () =>  cardActions(CardAction.PUBLISH, index),
+      () =>  cardActions(CardAction.REFRESH, index),
+      onMoreInfo
+    ];
 
     return controls.map((icon, index) => {
       return (
         <button
           key={`${icon}-${index}`}
-          onClick={shouldShowControl ? actions[index] : () => {}}
+          onClick={shouldShowControl ? actions[index] : () => {} }
         >
           <span className={"material-icons"}>{icon}</span>
         </button>
@@ -79,6 +72,15 @@ const Card = ({
     });
   };
   const overlayColor = "#ab47bc";
+
+  const hidden = { opacity: 0 };
+  const show = { opacity: 1 };
+  const smartTitleStyle = shouldShowControl ? hidden : {};
+  const smartControlStyle = shouldShowControl ? show : {};
+
+  const smartOverlay = editMode
+    ? { background: overlayColor, opacity: 0.95 }
+    : {};
 
   return (
     <div
@@ -94,9 +96,7 @@ const Card = ({
       {editMode && (
         <button
           className={"delete"}
-          onClick={() => {
-            cardActions(CardAction.DELETE, index);
-          }}
+          onClick={() => cardActions(CardAction.DELETE, index)}
         >
           <span className="material-icons">close</span>
         </button>
@@ -104,25 +104,16 @@ const Card = ({
 
       <div className="card__info">
         <div className="current">
-          <h3
-            className="current__city"
-            style={shouldShowControl ? { opacity: 0 } : {}}
-          >
+          <h3 className="current__city" style={smartTitleStyle}>
             {city.name}
           </h3>
 
-          <div
-            className="current__controls"
-            style={shouldShowControl ? { opacity: "1" } : {}}
-          >
+          <div className="current__controls" style={smartControlStyle}>
             {renderControls()}
           </div>
         </div>
       </div>
-      <div
-        className="card__overlay"
-        style={shouldConfig ? { background: overlayColor, opacity: 0.95 } : {}}
-      >
+      <div className="card__overlay" style={smartOverlay}>
         <></>
       </div>
       <img ref={imageRef} src={imageUrl} alt={"city"} />

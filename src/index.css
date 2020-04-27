@@ -89,6 +89,59 @@
   margin-bottom: 10%;
   margin-left: 15%;
 }
+.container .popup form .loader,
+.container .popup form .loader:before,
+.container .popup form .loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1s infinite ease-in-out;
+  animation: load7 1s infinite ease-in-out;
+}
+.container .popup form .loader {
+  color: #ffffff;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.container .popup form .loader:before,
+.container .popup form .loader:after {
+  content: "";
+  position: absolute;
+  top: 0;
+}
+.container .popup form .loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.container .popup form .loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
 .container .popup form label {
   color: white;
   font-family: "Oswald", sans-serif;
@@ -108,6 +161,9 @@
 }
 .container .popup form input:focus {
   outline: none;
+}
+.container .card:hover .card__overlay {
+  background: #ab47bc;
 }
 .container .card .delete {
   position: absolute;
@@ -131,9 +187,6 @@
 .container .card .delete:active {
   transition: none;
   transform: scale(2.2);
-}
-.container .card:hover .card__overlay {
-  background: #ab47bc;
 }
 .container .card--feature {
   grid-column: 2/span 1;
@@ -276,6 +329,62 @@
 .container .cards .card:hover {
   cursor: pointer;
 }
+.container .cards .card img {
+  user-select: none;
+}
+.container .cards .card__info .current .loader,
+.container .cards .card__info .current .loader:before,
+.container .cards .card__info .current .loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1s infinite ease-in-out;
+  animation: load7 1s infinite ease-in-out;
+}
+.container .cards .card__info .current .loader {
+  color: #ffffff;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.container .cards .card__info .current .loader:before,
+.container .cards .card__info .current .loader:after {
+  content: "";
+  position: absolute;
+  top: 0;
+}
+.container .cards .card__info .current .loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.container .cards .card__info .current .loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%, 80%, 100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
 .container .cards .card .card__overlay {
   position: absolute;
   width: 100%;
@@ -349,7 +458,8 @@
   display: flex;
   justify-content: space-evenly;
   transform: scale(1.5);
-  transition: opacity 0.3s ease;
+  margin-top: 10px;
+  user-select: none;
 }
 .container .cards .card .current__controls button {
   background-color: transparent;
@@ -369,114 +479,6 @@
 }
 .container .cards .card .current__controls button:focus {
   outline: none;
-}
-
-.container .card__info .current .loader,
-.container .card__info .current .loader:before,
-.container .card__info .current .loader:after {
-  border-radius: 50%;
-  width: 2.5em;
-  height: 2.5em;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation: load7 1s infinite ease-in-out;
-  animation: load7 1s infinite ease-in-out;
-}
-.container .card__info .current .loader {
-  color: #ffffff;
-  font-size: 10px;
-  margin: 80px auto;
-  position: relative;
-  text-indent: -9999em;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
-}
-.container .card__info .current .loader:before,
-.container .card__info .current .loader:after {
-  content: "";
-  position: absolute;
-  top: 0;
-}
-.container .card__info .current .loader:before {
-  left: -3.5em;
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
-}
-.container .card__info .current .loader:after {
-  left: 3.5em;
-}
-@-webkit-keyframes load7 {
-  0%, 80%, 100% {
-    box-shadow: 0 2.5em 0 -1.3em;
-  }
-  40% {
-    box-shadow: 0 2.5em 0 0;
-  }
-}
-@keyframes load7 {
-  0%, 80%, 100% {
-    box-shadow: 0 2.5em 0 -1.3em;
-  }
-  40% {
-    box-shadow: 0 2.5em 0 0;
-  }
-}
-
-.container .popup form .loader,
-.container .popup form .loader:before,
-.container .popup form .loader:after {
-  border-radius: 50%;
-  width: 2.5em;
-  height: 2.5em;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation: load7 1s infinite ease-in-out;
-  animation: load7 1s infinite ease-in-out;
-}
-.container .popup form .loader {
-  color: #ffffff;
-  font-size: 10px;
-  margin: 80px auto;
-  position: relative;
-  text-indent: -9999em;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation-delay: -0.16s;
-  animation-delay: -0.16s;
-}
-.container .popup form .loader:before,
-.container .popup form .loader:after {
-  content: "";
-  position: absolute;
-  top: 0;
-}
-.container .popup form .loader:before {
-  left: -3.5em;
-  -webkit-animation-delay: -0.32s;
-  animation-delay: -0.32s;
-}
-.container .popup form .loader:after {
-  left: 3.5em;
-}
-@-webkit-keyframes load7 {
-  0%, 80%, 100% {
-    box-shadow: 0 2.5em 0 -1.3em;
-  }
-  40% {
-    box-shadow: 0 2.5em 0 0;
-  }
-}
-@keyframes load7 {
-  0%, 80%, 100% {
-    box-shadow: 0 2.5em 0 -1.3em;
-  }
-  40% {
-    box-shadow: 0 2.5em 0 0;
-  }
 }
 
 /*# sourceMappingURL=index.css.map */
