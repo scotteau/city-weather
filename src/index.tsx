@@ -4,7 +4,7 @@ import "./index.css";
 import { City } from "./Model";
 import App from "./App";
 
-const cities = localStorage.getItem("cities");
+const cities = sessionStorage.getItem("cities");
 let data: City[] = cities ? JSON.parse(cities) : [];
 
 ReactDOM.render(<App cities={data} />, document.querySelector("#root"));
