@@ -22,15 +22,11 @@ const Card = ({
   const [shouldConfig, setShouldConfig] = useState(false);
   const [shouldShowControl, setShouldShowControl] = useState(false);
 
-  const [isFetching, setIsFetching] = useState(false);
-
-  let imageUrl: string;
+  let imageUrl = "";
 
   if (city) {
     imageUrl =
       theme === Mode.light ? city?.cover?.day?.url : city?.cover?.night?.url;
-  } else {
-    imageUrl = "";
   }
 
   const calculateAndSetCorrectSpan = () => {
@@ -40,13 +36,11 @@ const Card = ({
   };
 
   useEffect(() => {
-    imageRef.current.addEventListener("load", () => {
+    calculateAndSetCorrectSpan();
+    window.addEventListener("resize", () => {
       calculateAndSetCorrectSpan();
     });
-  }, [spans]);
-
-  useEffect(() => {
-    window.addEventListener("resize", () => {
+    imageRef.current.addEventListener("load", () => {
       calculateAndSetCorrectSpan();
     });
   }, []);
@@ -86,6 +80,8 @@ const Card = ({
     });
   };
 
+  const overlayColor = "#ab47bc";
+
   return (
     <div
       className={`card`}
@@ -116,7 +112,6 @@ const Card = ({
           >
             {city.name}
           </h3>
-          {isFetching && <Loader />}
 
           <div
             className="current__controls"
@@ -128,7 +123,7 @@ const Card = ({
       </div>
       <div
         className="card__overlay"
-        style={shouldConfig ? { background: "#ab47bc", opacity: 0.9 } : {}}
+        style={shouldConfig ? { background: overlayColor, opacity: 0.95 } : {}}
       >
         <></>
       </div>

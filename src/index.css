@@ -106,6 +106,9 @@
   color: #353535;
   text-transform: capitalize;
 }
+.container .popup form input:focus {
+  outline: none;
+}
 .container .card .delete {
   position: absolute;
   z-index: 20;
@@ -362,6 +365,9 @@
 }
 .container .cards .card .current__controls button:active {
   transform: scale(1.6);
+}
+.container .cards .card .current__controls button:focus {
+  outline: none;
 }
 
 .container .card__info .current .loader,

@@ -255,6 +255,10 @@ $card_info_opacity: 0.9;
         text-align: center;
         color: $textColor_dark;
         text-transform: capitalize;
+
+        &:focus {
+          outline: none;
+        }
       }
     }
   }
@@ -268,7 +272,6 @@ $card_info_opacity: 0.9;
       left: 1.2rem;
       color: white;
       transition: all 0.15s ease-in-out;
-      //@include debug;
       border: none;
       background-color: transparent;
       height: 1.5rem;
@@ -494,6 +497,10 @@ $card_info_opacity: 0.9;
             }
             &:active {
               transform: scale(1.6);
+            }
+
+            &:focus {
+              outline: none;
             }
           }
         }
