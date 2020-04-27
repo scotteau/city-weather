@@ -1,13 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import Card, { Usage } from "./Card";
-import Navbar from "./Navbar";
-import { City, Image } from "../index";
 import Axios from "axios";
-
-export enum Mode {
-  light,
-  dark,
-}
+import {City, Mode} from "./Model";
 
 interface myProps {
   cities?: City[];

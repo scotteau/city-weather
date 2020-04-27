@@ -25,3 +25,9 @@ export class Image {
         this.altDescription = altDescription;
     }
 }
+
+
+export enum Mode {
+    light,
+    dark,
+}
