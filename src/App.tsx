@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import Axios from "axios";
-import { CardAction, CardImage, City, Mode, NavAction } from "./Model";
+import { CardAction, City, Mode, NavAction } from "./Model";
 import Card from "./components/Card";
 import Navbar from "./components/Navbar";
 import Feature from "./components/Feature";
+import fetchGeocoding from "./apis/geocoding.api";
+import fetchPhotos from "./apis/photo.api";
 
 interface myProps {
   cities?: City[];
@@ -62,8 +63,6 @@ const App = ({ cities }: myProps) => {
     if (!data) return;
 
     if (action === CardAction.PUBLISH) {
-
-      console.log("publish");
       const payload = data[index] as City;
       const updatedData = data.filter((city, i) => i !== index);
       setData([payload, ...updatedData]);
@@ -80,7 +79,6 @@ const App = ({ cities }: myProps) => {
     }
 
     if (action === CardAction.REFRESH) {
-      console.log("refresh");
       const city = data[index] as City;
 
       const randomIndex = Math.floor(Math.random() * numberOfImages);
@@ -113,116 +111,45 @@ const App = ({ cities }: myProps) => {
     e.preventDefault();
     setIsFetching(true);
 
-    const query = currentCityName;
-    const query_dark = `${currentCityName} night`;
+    const { lat, lng, cityName } = await fetchGeocoding(currentCityName);
 
-    try {
-      const googleGeocodingUrl =
-        "https://maps.googleapis.com/maps/api/geocode/json";
+    const images = await fetchPhotos(cityName, numberOfImages);
 
-      const geocoding_response = await Axios.get(googleGeocodingUrl, {
-        params: {
-          address: currentCityName,
-          key: process.env.REACT_APP_GOOGLE_GEOCODING_ACCESS_KEY,
-        },
-      });
+    const randomIndex = Math.floor(Math.random() * numberOfImages);
+    const city: City = {
+      name: cityName,
+      lat: lat,
+      lng: lng,
+      backupImages: {
+        day: [...images.light],
+        night: [...images.dark],
+      },
+      cover: {
+        day: images.light[randomIndex],
+        night: images.dark[randomIndex],
+      },
+    };
 
-      const geocodingData = await geocoding_response.data.results[0];
-      const lat = geocodingData.geometry.location.lat;
-      const lng = geocodingData.geometry.location.lng;
-      const cityName = geocodingData.address_components[0].long_name;
-
-      if (cityName.match(/\d+/)) {
-        console.log(lat, lng, cityName);
-        console.log("not valid city name, should do something"); // todo - catch this error
-        throw new Error("not valid city name!");
-      } // good - can get geocoding
-
-      // next - go further to get weather and images
-
-      const unsplashBaseUrl = "https://api.unsplash.com/search/photos";
-      const unsplash_response_light = await Axios.get(unsplashBaseUrl, {
-        headers: {
-          Authorization: process.env.REACT_APP_UNSPLASH_ACCESS_KEY,
-        },
-        params: {
-          query: query,
-          per_page: numberOfImages,
-        },
-      });
-
-      const unsplash_response_dark = await Axios.get(unsplashBaseUrl, {
-        headers: {
-          Authorization: process.env.REACT_APP_UNSPLASH_ACCESS_KEY,
-        },
-        params: {
-          query: query_dark,
-          per_page: numberOfImages,
-        },
-      });
-
-      const imagesData_light = unsplash_response_light.data.results.map(
-        (p: any) => {
-          return new CardImage(
-            p.urls.regular,
-            p.id,
-            p.links.html,
-            p.alt_description
-          );
-        }
-      );
-      const imagesData_dark = unsplash_response_dark.data.results.map(
-        (p: any) => {
-          return new CardImage(
-            p.urls.regular,
-            p.id,
-            p.links.html,
-            p.alt_description
-          );
-        }
-      );
-
-      const randomIndex = Math.floor(Math.random() * numberOfImages);
-
-      const city: City = {
-        name: cityName,
-        lat: lat,
-        lng: lng,
-        backupImages: {
-          day: [...imagesData_light],
-          night: [...imagesData_dark],
-        },
-        cover: {
-          day: imagesData_light[randomIndex],
-          night: imagesData_dark[randomIndex],
-        },
-      };
-
-      if (data && data.length !== 0) {
-        setData([...data, city]);
-      } else {
-        setData([city]);
-      }
-
-      //reset ui
-      setCurrentCityName("");
-      setAddingCity(false);
-      setIsFetching(false);
-    } catch (error) {
-      console.log(error);
+    if (data && data.length !== 0) {
+      setData([...data, city]);
+    } else {
+      setData([city]);
     }
+
+    //reset ui
+    setCurrentCityName("");
+    setAddingCity(false);
+    setIsFetching(false);
   };
 
   useEffect(() => {
     localStorage.setItem("cities", JSON.stringify(data));
   }, [data]);
 
+  const smartBgColor = mode === Mode.dark ? { backgroundColor: "#212121" } : {};
+
   return (
-    <div
-      className={"container"}
-      id={"start"}
-      style={mode === Mode.dark ? { backgroundColor: "#212121" } : {}}
-    >
+    <div className={"container"} id={"start"} style={smartBgColor}>
       <Navbar onChanges={handleChanges} theme={mode} editMode={editMode} />
 
       <div className="popup" style={!addingCity ? { display: "none" } : {}}>

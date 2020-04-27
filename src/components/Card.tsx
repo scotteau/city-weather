@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CardAction, City, Mode } from "../Model";
-import Loader from "./Loader";
 
 interface myProps {
   city: City;
@@ -28,13 +27,15 @@ const Card = ({
       theme === Mode.light ? city?.cover?.day?.url : city?.cover?.night?.url;
   }
 
-  const calculateAndSetCorrectSpan = () => {
-    const height = imageRef.current.clientHeight;
-    const spanHeight = 4;
-    setSpans(Math.round(height / spanHeight) + 1);
-  };
+
 
   useEffect(() => {
+    const calculateAndSetCorrectSpan = () => {
+      const height = imageRef.current.clientHeight;
+      const spanHeight = 4;
+      setSpans(Math.round(height / spanHeight) + 1);
+    };
+
     calculateAndSetCorrectSpan();
     window.addEventListener("resize", () => {
       calculateAndSetCorrectSpan();
@@ -42,7 +43,7 @@ const Card = ({
     imageRef.current.addEventListener("load", () => {
       calculateAndSetCorrectSpan();
     });
-  }, []);
+  }, [imageRef]);
 
   const renderControls = () => {
     const controls = ["publish", "refresh", "info"];

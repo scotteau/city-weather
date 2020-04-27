@@ -1,13 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import Axios from "axios";
-import {
-  City,
-  Mode,
-  OpenWeatherResType,
-  Report,
-  Weather,
-} from "../Model";
+import { CardAction, City, Mode, Report } from "../Model";
 import Loader from "./Loader";
+import fetchWeather from "../apis/weather.api";
 
 interface myProps {
   city: City;
@@ -37,7 +31,7 @@ const Feature = ({
     imageUrl = "";
   }
 
-  const loadImage = () => {
+  const loadImageAdBackground = () => {
     return {
       backgroundImage: `url(${imageUrl})`,
       backgroundPosition: "center",
@@ -45,7 +39,6 @@ const Feature = ({
       backgroundRepeat: "no-repeat",
     };
   };
-
 
   const renderForecast = () => {
     let forecast = [] as any[];
@@ -59,9 +52,9 @@ const Feature = ({
       "Saturday",
     ];
 
-    if (weatherReport) {
+    if (weatherReport && weatherReport.length !== 0) {
       for (let i = 0; i < 5; i++) {
-        const forecastData = weatherReport.daily;
+        const forecastData = weatherReport?.daily;
         const weekDay = new Date(forecastData[i].date * 1000).getDay();
 
         const daily = {
@@ -86,73 +79,39 @@ const Feature = ({
         forecast.push(item);
       }
     }
-
     return forecast;
   };
 
+  const retrieveWeather = async (city: City) => {
+    setIsFetching(true);
+    const report = await fetchWeather(city);
+    setWeatherReport(report);
+    setIsFetching(false);
+  };
+
+  const renderDate = (sec: number) => {
+    return new Date(sec * 1000).toDateString();
+  };
+
+  const hidden = { display: "none" };
+  const overlayStyle = shouldConfig
+    ? { background: "#ab47bc", opacity: 0.9 }
+    : {};
 
   useEffect(() => {
     setShouldConfig(editMode);
   }, [editMode]);
 
   useEffect(() => {
-    const fetchWeather = async () => {
-      if (city) {
-        setIsFetching(true);
-        const weatherRequest = await Axios.get(
-          "https://api.openweathermap.org/data/2.5/onecall?",
-          {
-            params: {
-              lat: city.lat,
-              lon: city.lng,
-              units: "metric",
-              appid: process.env.REACT_APP_OPEN_WEATHER_APPID,
-            },
-          }
-        );
-
-        const weatherData = weatherRequest.data as OpenWeatherResType;
-        setIsFetching(false);
-
-        const info = {
-          current: {
-            date: weatherData.current.dt,
-            temp: weatherData.current.temp,
-            description: weatherData.current.weather[0].description,
-          },
-          daily: weatherData.daily.map<Weather>(
-            (w) =>
-              new Weather(
-                w.dt,
-                Math.round(w.temp.day),
-                w.weather[0].description
-              )
-          ),
-        } as Report;
-
-        setWeatherReport(info);
-      }
-    };
-
-    fetchWeather();
+    retrieveWeather(city);
   }, [city]);
 
-
-  const renderDate = (sec: number) => {
-    return new Date(sec * 1000).toDateString();
-  };
-
   return (
-    <div
-      className={`card card--feature`}
-      style={loadImage()}
-    >
+    <div className={`card card--feature`} style={loadImageAdBackground()}>
       {editMode && (
         <button
           className={"delete"}
-          onClick={() => {
-            cardActions("delete", 0);
-          }}
+          onClick={() => cardActions(CardAction.DELETE, 0)}
         >
           <span className="material-icons">close</span>
         </button>
@@ -162,38 +121,26 @@ const Feature = ({
         <ul className={"forecast"}>{weatherReport && renderForecast()}</ul>
 
         <div className="current">
-          <h3
-            className="current__city"
-          >
-            {city.name}
-          </h3>
+          <h3 className="current__city">{city.name}</h3>
           {isFetching && <Loader />}
           <span className="current__date">
             {!isFetching && renderDate(weatherReport?.current.date)}
           </span>
         </div>
 
-          <div className="weather">
-            <span className="weather__condition">
-              {isFetching ? "" : weatherReport?.current?.description}
-            </span>
-            <span className="weather__temp">
-              {isFetching ? "" : `${Math.round(weatherReport?.current.temp)}°`}
-            </span>
-          </div>
+        <div className="weather">
+          <span className="weather__condition">
+            {isFetching ? "" : weatherReport?.current?.description}
+          </span>
+          <span className="weather__temp">
+            {isFetching ? "" : `${Math.round(weatherReport?.current.temp)}°`}
+          </span>
+        </div>
       </div>
-      <div
-        className="card__overlay"
-        style={shouldConfig ? { background: "#ab47bc", opacity: 0.9 } : {}}
-      >
+      <div className="card__overlay" style={overlayStyle}>
         <></>
       </div>
-      <img
-        ref={imageRef}
-        src={imageUrl}
-        alt={"city"}
-        style={{ display: "none" }}
-      />
+      <img ref={imageRef} src={imageUrl} alt={"city"} style={hidden} />
     </div>
   );
 };
