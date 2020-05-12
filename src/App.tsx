@@ -97,7 +97,7 @@ const App = ({ cities }: myProps) => {
           : city.cover.night;
     }
 
-    sessionStorage.setItem("cities", JSON.stringify(data));
+    localStorage.setItem("cities", JSON.stringify(data));
   };
 
   useEffect(() => {
@@ -143,7 +143,7 @@ const App = ({ cities }: myProps) => {
   };
 
   useEffect(() => {
-    sessionStorage.setItem("cities", JSON.stringify(data));
+    localStorage.setItem("cities", JSON.stringify(data));
   }, [data]);
 
   const smartBgColor = mode === Mode.dark ? { backgroundColor: "#212121" } : {};

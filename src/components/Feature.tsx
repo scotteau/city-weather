@@ -58,7 +58,7 @@ const Feature = ({
         const weekDay = new Date(forecastData[i].date * 1000).getDay();
 
         const daily = {
-          date: i === 0 ? "Tomorrow" : days[weekDay + 1],
+          date: i === 0 ? "Tomorrow" : days[(weekDay + 1) > days.length-1 ? 0 : weekDay + 1],
           temp: forecastData[i].temp,
           description: forecastData[i].description,
         };
